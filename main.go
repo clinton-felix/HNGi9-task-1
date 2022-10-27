@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 )
 
 type ZuriDetails struct {
@@ -31,9 +32,14 @@ func getDetails(w http.ResponseWriter, r *http.Request)  {
 func main()  {
 	// instantiating the routers with gorilla mux
 	s := mux.NewRouter()
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Printf("Error loading .env file")
+	}
 	port := os.Getenv("PORT")
     if port == "" {
-        port = "8080"
+        port = "3000"
     }
 
 	// populating the myZuriDetail Slice with my Details

@@ -1,0 +1,1 @@
+web: bin/stage-1-task
