@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 )
@@ -30,6 +31,10 @@ func getDetails(w http.ResponseWriter, r *http.Request)  {
 func main()  {
 	// instantiating the routers with gorilla mux
 	s := mux.NewRouter()
+	port := os.Getenv("PORT")
+    if port == "" {
+        port = "8080"
+    }
 
 	// populating the myZuriDetail Slice with my Details
 	myZuriDetail = append(myZuriDetail, 
@@ -46,6 +51,6 @@ func main()  {
 
 	http.Handle("/", s)
 	// running the Server...
-	fmt.Printf("Starting Server...")
-	log.Fatal(http.ListenAndServe(":443", s))
+	fmt.Printf("Listening on port %v...", port)
+	log.Fatal(http.ListenAndServe(":"+port, s))
 }
