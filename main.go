@@ -48,7 +48,7 @@ func main()  {
 		Age: 25, 
 		Bio: "Backend Dev, Proficient with Golang, Rust, Nodejs and web3 Solidity",
 	}
-	
+
 
 	// setting the handler function...
 	s.HandleFunc("/", getDetails).Methods("GET")
@@ -64,7 +64,7 @@ func main()  {
 	// running the Server...
 	fmt.Printf("Listening on port %v...", port)
 	handler := c.Handler(s)
-	http.Handle("/", s)
 	log.Fatal(http.ListenAndServe(":"+port, handler))
+	http.Handle("/", s)
 
 }
