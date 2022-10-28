@@ -12,7 +12,7 @@ import (
 )
 
 type ZuriDetails struct {
-	SlackUserName string  `json:"slackUserName"`
+	SlackUsername string  `json:"slackUsername"`
 	Backend       bool    `json:"backend"`
 	Age           int64 `json:"age"`
 	Bio           string  `json:"bio"`
@@ -52,7 +52,7 @@ func main()  {
 
 	// populating the myZuriDetail Slice with my Details
 	myZuriDetail = ZuriDetails{
-		SlackUserName: "ClintElix", 
+		SlackUsername: "ClintElix", 
 		Backend: true, 
 		Age: 25, 
 		Bio: "Backend Dev, Proficient with Golang, Rust, Nodejs and web3 Solidity",
