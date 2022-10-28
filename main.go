@@ -9,7 +9,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
-	"github.com/rs/cors"
 )
 
 type ZuriDetails struct {
@@ -21,8 +20,18 @@ type ZuriDetails struct {
 
 var myZuriDetail ZuriDetails
 
-// setting up a function to get my JSON encoded details
+func setupCorsResponse(w *http.ResponseWriter, req *http.Request) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Authorization")
+ }
+
+// setting up a function to get my JSON encoded details with CORS
 func getDetails(w http.ResponseWriter, r *http.Request)  {
+	setupCorsResponse(&w, r)
+		if (*r).Method == "OPTIONS" {
+		   return
+		}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(myZuriDetail)
 }
@@ -49,22 +58,12 @@ func main()  {
 		Bio: "Backend Dev, Proficient with Golang, Rust, Nodejs and web3 Solidity",
 	}
 
-
 	// setting the handler function...
 	s.HandleFunc("/", getDetails).Methods("GET")
 
-
-	// handling cors
-	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"},
-		AllowCredentials: true,
-		AllowedMethods: []string{"GET", "DELETE", "POST", "PUT"},
-	})
-
 	// running the Server...
 	fmt.Printf("Listening on port %v...", port)
-	handler := c.Handler(s)
-	log.Fatal(http.ListenAndServe(":"+port, handler))
+	log.Fatal(http.ListenAndServe(":"+port, s))
 	http.Handle("/", s)
 
 }
