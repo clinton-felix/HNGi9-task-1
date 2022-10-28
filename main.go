@@ -9,6 +9,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 )
 
 type ZuriDetails struct {
@@ -18,9 +19,7 @@ type ZuriDetails struct {
 	Bio           string  `json:"bio"`
 }
 
-// declaring a slice for my details
-var myZuriDetail []ZuriDetails
-
+var myZuriDetail ZuriDetails
 
 // setting up a function to get my JSON encoded details
 func getDetails(w http.ResponseWriter, r *http.Request)  {
@@ -43,20 +42,29 @@ func main()  {
     }
 
 	// populating the myZuriDetail Slice with my Details
-	myZuriDetail = append(myZuriDetail, 
-		ZuriDetails{
-			SlackUserName: "ClintElix", 
-			Backend: true, 
-			Age: 25, 
-			Bio: "Backend Dev, Proficient with Golang, Rust, Nodejs and web3 Solidity"},
-	)
+	myZuriDetail = ZuriDetails{
+		SlackUserName: "ClintElix", 
+		Backend: true, 
+		Age: 25, 
+		Bio: "Backend Dev, Proficient with Golang, Rust, Nodejs and web3 Solidity",
+	}
+	
 
 	// setting the handler function...
 	s.HandleFunc("/", getDetails).Methods("GET")
 
 
-	http.Handle("/", s)
+	// handling cors
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowCredentials: true,
+		AllowedMethods: []string{"GET", "DELETE", "POST", "PUT"},
+	})
+
 	// running the Server...
 	fmt.Printf("Listening on port %v...", port)
-	log.Fatal(http.ListenAndServe(":"+port, s))
+	handler := c.Handler(s)
+	http.Handle("/", s)
+	log.Fatal(http.ListenAndServe(":"+port, handler))
+
 }
